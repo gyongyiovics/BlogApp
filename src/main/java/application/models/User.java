@@ -1,5 +1,6 @@
 package application.models;
 
+import application.dtos.UserDTO;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -12,58 +13,50 @@ import java.util.List;
 @Entity
 public class User implements UserDetails {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     private String userName;
     private String passWord;
-    //@Column(columnDefinition = "DEFAULT 'UNREGISTERED'")
     @Enumerated(EnumType.STRING)
     private Role usersRole; //FK: role_table(role_name) and enum
-    //private RoleName usersRole = RoleName.UNREGISTERED;
     private boolean isLocked;
-    //@OneToMany(mappedBy = "owner")
-    //private List<Blog> ownBlogs;
-    //@OneToMany(mappedBy = "userName")
-    //private List<Note> ownNotes;
+    @OneToMany(mappedBy = "owner")
+    private List<Blog> ownBlogs;
 
     public User() {
-        /*List<Blog> ownBlogs = new ArrayList<>();
-        List<Note> ownNotes = new ArrayList<>();*/
+        List<Blog> ownBlogs = new ArrayList<>();
     }
 
-    public User(long id, String userName, String passWord, Role usersRole) {
-        this.id = id;
+
+    public User(String userName, String passWord, Role usersRole) {
         this.userName = userName;
         this.passWord = passWord;
         this.usersRole = usersRole;
     }
+
+    public User(UserDTO userDTO, Role role) {
+        this(userDTO.getUsername(), userDTO.getPassword(), role);
+    }
+
+    /*public User(String userName, String passWord, Role role) {
+        this.userName = userName;
+        this.passWord = passWord;
+        this.usersRole = role;
+    }*/
 
     public User(long id,
                 String userName,
                 String passWord,
                 Role usersRole,
-                boolean isUnLocked/*,
-                List<Blog> ownBlogs,
-                List<Note> ownNotes*/) {
+                boolean isLocked,
+                List<Blog> ownBlogs) {
         this.id = id;
         this.userName = userName;
         this.passWord = passWord;
         this.usersRole = usersRole;
-        this.isLocked = isUnLocked;
-        /*
+        this.isLocked = isLocked;
         this.ownBlogs = ownBlogs;
-        this.ownNotes = ownNotes;
-        */
     }
-
-    /*public RoleName registerUser() {
-        this.setUsersRole(RoleName.USER);
-        return this.getUsersRole();
-    }
-
-    public RoleName unregisterUser() {
-        this.setUsersRole(RoleName.UNREGISTERED);
-        return this.getUsersRole();
-    }*/
 
     @Override
     public String getUsername() {
@@ -95,22 +88,16 @@ public class User implements UserDetails {
         return !isLocked;
     }
 
-    /**
-     * TODO: ezzel valamit csinálni?
-     * @return null
-     */
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<SimpleGrantedAuthority> list = new ArrayList<>();
-        //list.add(new SimpleGrantedAuthority());
+
+        for (Authority auth : usersRole.authorities) {
+            list.add(new SimpleGrantedAuthority(auth.toString()));
+        }
+
         return null;
     }
-
-    /*
-    public String getUserName() {
-        return userName;
-    }
-    */
 
     public long getId() {
         return id;
@@ -124,11 +111,6 @@ public class User implements UserDetails {
         this.userName = userName;
     }
 
-    /*
-    public String getPassWord() {
-        return passWord;
-    }
-    */
     public void setPassWord(String passWord) {
         this.passWord = passWord;
     }
@@ -149,7 +131,6 @@ public class User implements UserDetails {
         isLocked = unLocked;
     }
 
-    /*
     public List<Blog> getOwnBlogs() {
         return ownBlogs;
     }
@@ -157,13 +138,4 @@ public class User implements UserDetails {
     public void setOwnBlogs(List<Blog> ownBlogs) {
         this.ownBlogs = ownBlogs;
     }
-
-    public List<Note> getOwnNotes() {
-        return ownNotes;
-    }
-
-    public void setOwnNotes(List<Note> ownNotes) {
-        this.ownNotes = ownNotes;
-    }
-    */
 }

@@ -25,8 +25,8 @@ public class WebSecConfig extends WebSecurityConfigurerAdapter {
                 .logout()
                 .and()
                 .authorizeRequests()
-                .antMatchers("/", "/home", "/register").permitAll()
-                .antMatchers("/users").hasAuthority("CAN_DELETE_NOTE")
+                .antMatchers("/", "/home", "/register").permitAll() //no need to login!
+                .antMatchers("/users").hasAuthority("ADMIN")
                 .antMatchers("/**").authenticated();
     }
 }

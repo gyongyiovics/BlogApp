@@ -27,7 +27,7 @@ public enum Role {
             Authority.CAN_READ_DATA);
 
 
-    private Authority[] authorities;
+    public final Authority[] authorities;
 
     Role(Authority... authorities) {
         this.authorities = authorities;

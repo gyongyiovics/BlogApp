@@ -7,37 +7,34 @@ import java.util.List;
 @Entity
 public class Note {
     @Id
+    @GeneratedValue
     private long id;
-    @ManyToOne
-    private Blog noteText;
-    //@ManyToOne
+    private String noteText;
     private String userName;
     private boolean hasComment;
     @OneToMany(mappedBy = "commentText")
     private List<Comment> comments;
-    //private String comments;
-    //@Column(columnDefinition = "DEFAULT 'DRAFT'")
     @Enumerated(EnumType.STRING)
     private State state;
-    //private State state = State.DRAFT;
-    private long blogId; //FK: blog_table(id)
+    @ManyToOne
+    private Blog blog; //FK: blog_table(id)
 
     public Note() {
         List<Comment> comments = new ArrayList<>();
     }
 
     public Note(long id,
-                Blog noteText,
+                String noteText,
                 String userName,
                 boolean hasComment,
                 State state,
-                long blogId) {
+                Blog blog) {
         this.id = id;
         this.noteText = noteText;
         this.userName = userName;
         this.hasComment = hasComment;
         this.state = state;
-        this.blogId = blogId;
+        this.blog = blog;
     }
 
     public long getId() {
@@ -48,11 +45,11 @@ public class Note {
         this.id = id;
     }
 
-    public Blog getNoteText() {
+    public String getNoteText() {
         return noteText;
     }
 
-    public void setNoteText(Blog noteText) {
+    public void setNoteText(String noteText) {
         this.noteText = noteText;
     }
 
@@ -88,11 +85,11 @@ public class Note {
         this.state = state;
     }
 
-    public long getBlogId() {
-        return blogId;
+    public Blog getBlog() {
+        return blog;
     }
 
-    public void setBlogId(long blogId) {
-        this.blogId = blogId;
+    public void setBlog(Blog blog) {
+        this.blog = blog;
     }
 }

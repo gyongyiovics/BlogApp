@@ -1,8 +1,8 @@
 package application.services;
 
-import application.models.Blog;
-import application.models.Note;
-import application.models.State;
+import application.dtos.BlogDTO;
+import application.models.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
@@ -16,6 +16,13 @@ public class BlogService {
 
     @PersistenceContext
     private EntityManager em;
+    private UserService userService;
+
+    @Autowired
+    public BlogService(EntityManager em, UserService userService) {
+        this.em = em;
+        this.userService = userService;
+    }
 
     @Transactional
     public List<Blog> getAllBlogs() {
@@ -24,16 +31,20 @@ public class BlogService {
     }
 
     @Transactional
-    public boolean postNewBlog() {
+    public BlogSchema getSchemaByName(String name) {
+        return em.createQuery("SELECT blogSchema FROM BlogSchema blogSchema WHERE blogSchema.schemaName = : schema_name", BlogSchema.class)
+                .setParameter("schema_name", name)
+                .getSingleResult();
+    }
+
+    @Transactional
+    public boolean postNewBlog(BlogDTO dto) {
         try {
-            List<Note> notes = new ArrayList<>();
-            notes.add(new Note(1, new Blog(), "Gizi@2", true, State.RELEASED, 2));
-            notes.add(new Note(2, new Blog(), "Laci@vv", true, State.RELEASED, 2));
+            User user = userService.getLoggedInUser();
+            BlogSchema blogSchema = getSchemaByName(dto.getSchemaName());
 
-            Blog newBlog = new Blog(1, notes, "no comment", "schema1", "Jenci23");
-
+            Blog newBlog = new Blog(user, blogSchema);
             em.persist(newBlog);
-
             return true;
         } catch (Exception e) {
             return false;

@@ -7,25 +7,39 @@ import java.util.List;
 @Entity
 public class Blog {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     @OneToMany(mappedBy = "noteText")
     private List<Note> noteTexts;
     private String commentText;
-    //@OneToOne(mappedBy = "schemaName")
-    private String blogSchema; //FK: blog_schema = blog_schema(schema_name)
-    private String owner;
+    @ManyToOne
+    private BlogSchema blogSchema; //FK: blog_schema = blog_schema(schema_name)
+    @ManyToOne
+    private User owner;
 
     public Blog() {
         List<Note> noteTexts = new ArrayList<>();
     }
 
-    public Blog(long id, List<Note> noteTexts, String commentText, String blogSchema, String owner) {
+    public Blog(long id, List<Note> noteTexts, String commentText, BlogSchema blogSchema, User owner) {
         this.id = id;
         this.noteTexts = noteTexts;
         this.commentText = commentText;
         this.blogSchema = blogSchema;
         this.owner = owner;
+    }
+
+    public Blog(String commentText, BlogSchema blogSchema, User owner) {
+        this();
+        this.commentText = commentText;
+        this.blogSchema = blogSchema;
+        this.owner = owner;
+    }
+
+    public Blog(User owner, BlogSchema schema) {
+        this();
+        this.owner = owner;
+        this.blogSchema = schema;
     }
 
     public long getId() {
@@ -52,19 +66,19 @@ public class Blog {
         this.commentText = commentText;
     }
 
-    public String getBlogSchema() {
+    public BlogSchema getBlogSchema() {
         return blogSchema;
     }
 
-    public void setBlogSchema(String blogSchema) {
+    public void setBlogSchema(BlogSchema blogSchema) {
         this.blogSchema = blogSchema;
     }
 
-    public String getOwner() {
+    public User getOwner() {
         return owner;
     }
 
-    public void setOwner(String owner) {
+    public void setOwner(User owner) {
         this.owner = owner;
     }
 }
