@@ -5,11 +5,8 @@ import application.models.Blog;
 import application.returnmodels.ReturnModel;
 import application.services.BlogService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -35,17 +32,35 @@ public class BlogController {
         return "nem ok";
     }*/
 
-    @PreAuthorize("isAuthenticated()")
-    @RequestMapping(value = "/blogs", method = RequestMethod.POST) //only logged in
-    public ReturnModel<String> postBlog(@RequestBody BlogDTO blogDTO) {
-        ReturnModel<String> returnText = new ReturnModel<>();
+    //@PreAuthorize("isAuthenticated()")
+    @ResponseBody
+    @RequestMapping(value = "/add-new-blog",
+            method = RequestMethod.POST,
+            consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE},
+            produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE}) //only logged in
+    public String postBlog(@RequestBody BlogDTO blog) {
+        //ReturnModel<BlogDTO> returnText = new ReturnModel<>();
+        //Blog newBlog = service.postNewBlog(blog);
+        /*return ResponseEntity
+                .created(URI
+                        .create(String.format("/blogs")))
+                .body(newBlog);
+        */
 
-        if(service.postNewBlog(blogDTO)) {
-            returnText.setObject("new blog is added");
+        if(service.postNewBlog(blog)) {
+            return "ok";
         }
-
-        returnText.setObject("something went wrong");
-        return returnText;
+        return "not ok";
     }
+
+    /*
+    @GetMapping(value = "/add-new-blog")
+    public String addNewBlog() {
+        if(service.newBlog()) {
+            return "ok, added";
+        }
+        return "not ok";
+    }
+    */
 
 }

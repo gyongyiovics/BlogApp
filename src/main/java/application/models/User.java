@@ -12,9 +12,10 @@ import java.util.List;
 
 @Entity
 public class User implements UserDetails {
-    @Id
+    //@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+    @Id
     private String userName;
     private String passWord;
     @Enumerated(EnumType.STRING)

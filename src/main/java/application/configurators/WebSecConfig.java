@@ -25,7 +25,7 @@ public class WebSecConfig extends WebSecurityConfigurerAdapter {
                 .logout()
                 .and()
                 .authorizeRequests()
-                .antMatchers("/", "/home", "/register").permitAll() //no need to login!
+                .antMatchers("/", "/home", "/register", "/add-new-blog").permitAll() //no need to login!
                 .antMatchers("/users").hasAuthority("ADMIN")
                 .antMatchers("/**").authenticated();
     }

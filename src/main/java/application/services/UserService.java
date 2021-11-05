@@ -46,7 +46,7 @@ public class UserService implements UserDetailsService {
         //checks whether user is logged in
         if (auth != null) {
             Object principal = auth.getPrincipal();
-            //checks whether the logged in user type is the same as I wanted it to be
+            //checks whether the logged-in user type is the same as I wanted it to be
             if (principal instanceof User) {
                 return (User) principal;
             }
@@ -108,6 +108,7 @@ public class UserService implements UserDetailsService {
      * https://www.baeldung.com/registration-with-spring-mvc-and-spring-security
      */
 
+    /*
     @Transactional
     public boolean registerUser(UserDTO userDTO) {
         boolean result = false;
@@ -122,10 +123,13 @@ public class UserService implements UserDetailsService {
         }
         return result;
     }
+    */
 
+    /*
     @Transactional
     public void addNewUser(User user) {
         user.setPassWord(encoder.encode(user.getPassword()));
         em.persist(user);
     }
+    */
 }

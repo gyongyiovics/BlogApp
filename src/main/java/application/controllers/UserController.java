@@ -14,12 +14,12 @@ import java.util.List;
 public class UserController {
 
     UserService service;
-    //UserRepository repository;
+    UserRepository repository;
 
     @Autowired
-    public UserController(UserService service/*, UserRepository repository*/) {
+    public UserController(UserService service, UserRepository repository) {
         this.service = service;
-        //this.repository = repository;
+        this.repository = repository;
     }
 
     @RequestMapping(value = {"/", "/home"}, method = RequestMethod.GET)
@@ -47,7 +47,7 @@ public class UserController {
         return service.getLoggedInUser();
     }
 
-
+    /*
     @PostMapping(value = "/register")
     public String register(@RequestBody UserDTO userDTO) {
         if(service.registerUser(userDTO)) {
@@ -55,8 +55,21 @@ public class UserController {
         }
         return "not ok";
     }
+    */
 
     /*
+    @PostMapping(value = "/register")
+    public UserDTO registeredUser(@RequestBody UserDTO user) {
+        try {
+            return repository.save(user);
+        } catch (Exception e) {
+            return null;
+        }
+    }
+    */
+
+
+
     @GetMapping(value = "/register")
     public String register() {
         if(service.registerUser()) {
@@ -64,7 +77,7 @@ public class UserController {
         }
         return "not ok";
     }
-    */
+
 
     //https://medium.com/javarevisited/a-simple-user-authentication-api-made-with-spring-boot-4a7135ff1eca
     //https://www.codejava.net/frameworks/spring-boot/user-registration-and-login-tutorial
