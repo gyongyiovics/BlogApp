@@ -60,6 +60,7 @@ public class BlogService {
             return true;
             //return newBlog;
         } catch (Exception e) {
+            e.printStackTrace();
             return false;
             //return null;
         }
